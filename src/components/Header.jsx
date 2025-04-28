@@ -13,12 +13,12 @@ function useUserSession(initialUser) {
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(async (user) => {
       if (user) {
-        const idToken = user.getIdToken();
+        const idToken = await user.getIdToken();
         await setCookie("__session", idToken);
       } else {
-        deleteCookie("user");
+        await deleteCookie("user");
       }
-      if (initialUser.uid === user?.uid) {
+      if (initialUser?.uid === user?.uid) {
         return;
       }
       window.location.reload();
