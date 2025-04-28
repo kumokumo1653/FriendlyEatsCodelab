@@ -9,7 +9,7 @@ import { getFirestore } from "firebase/firestore";
 // Replace the function below
 export async function handleReviewFormSubmission(data) {
   const { app } = await getAuthenticatedAppForUser();
-  const db = getFirestore(app);
+  const db = getFirestore(app, "friendlyeats-codelab");
 
   await addReviewToRestaurant(db, data.get("restaurantId"), {
     text: data.get("text"),

@@ -22,7 +22,7 @@ export default async function Home(props) {
   const { currentUser } = await getUser();
   const { firebaseServerApp } = await getAuthenticatedAppForUser();
   const restaurant = await getRestaurantById(
-    getFirestore(firebaseServerApp),
+    getFirestore(firebaseServerApp, "friendlyeats-codelab"),
     params.id
   );
 

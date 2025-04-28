@@ -17,7 +17,7 @@ export default async function Home(props) {
   // ?city=London&category=Indian&sort=Review
   const { firebaseServerApp } = await getAuthenticatedAppForUser();
   const restaurants = await getRestaurants(
-    getFirestore(firebaseServerApp),
+    getFirestore(firebaseServerApp, "friendlyeats-codelab"),
     searchParams
   );
   return (
