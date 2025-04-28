@@ -34,11 +34,46 @@ const updateWithRating = async (
   newRatingDocument,
   review
 ) => {
-  return;
+  const restaurant = await transaction.get(docRef);
+  const data = restaurant.data();
+  const newNumRatings = data?.numRatings ? data.numRatings + 1 : 1;
+  const newSumRating = (data?.sumRating || 0) + Number(review.rating);
+  const newAverage = newSumRating / newNumRatings;
+
+  transaction.update(docRef, {
+    numRatings: newNumRatings,
+    sumRating: newSumRating,
+    avgRating: newAverage,
+  });
+
+  transaction.set(newRatingDocument, {
+    ...review,
+    timestamp: Timestamp.fromDate(new Date()),
+  });
 };
 
 export async function addReviewToRestaurant(db, restaurantId, review) {
-  return;
+  if (!restaurantId) {
+    console.log("Error: Invalid restaurantId received: ", restaurantId);
+    return;
+  }
+  if (!review) {
+    console.log("Error: Invalid review received: ", review);
+    return;
+  }
+  try {
+    const docRef = doc(collection(db, "restaurants", restaurantId));
+    const newRatingDocument = doc(
+      collection(db, `restaurants/${restaurantId}/ratings`)
+    );
+
+    await runTransaction(db, (transaction) =>
+      updateWithRating(transaction, docRef, newRatingDocument, review)
+    );
+  } catch (e) {
+    console.error("Error adding review: ", e);
+    throw e;
+  }
 }
 
 function applyQueryFilters(q, { category, city, price, sort }) {
