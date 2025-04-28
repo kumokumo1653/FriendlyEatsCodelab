@@ -16,7 +16,7 @@ function useUserSession(initialUser) {
         const idToken = await user.getIdToken();
         await setCookie("__session", idToken);
       } else {
-        await deleteCookie("user");
+        await deleteCookie("__session");
       }
       if (initialUser?.uid === user?.uid) {
         return;
